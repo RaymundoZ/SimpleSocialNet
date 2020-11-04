@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Профиль"
+        android:icon="@drawable/profile_icon" />
+    <item
+        android:title="Сообщения"
+        android:icon="@drawable/messages_icon" />
+    <item
+        android:title="Друзья"
+        android:icon="@drawable/friends_icon" />
+</menu>

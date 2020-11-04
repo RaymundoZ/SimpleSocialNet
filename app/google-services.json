@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "750797283445",
+    "firebase_url": "https://simplesocialnet.firebaseio.com",
+    "project_id": "simplesocialnet",
+    "storage_bucket": "simplesocialnet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750797283445:android:8a7cfd15b350bceac0d83c",
+        "android_client_info": {
+          "package_name": "com.raymundo.simplesocialnet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "750797283445-la7rqrob6jjlhin1t5s525ai5eg838pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS7FSe9HRCcCx7CWCoXHz2FNqgSsfDsHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "750797283445-la7rqrob6jjlhin1t5s525ai5eg838pg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
