@@ -2,6 +2,7 @@ package com.raymundo.simplesocialnet;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
@@ -68,6 +70,23 @@ public class MainFragment extends Fragment {
                     drawerLayout.openDrawer(navView);
                 else if (arrowDrawable.getProgress() == 1)
                     drawerLayout.closeDrawer(navView);
+            }
+        });
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.friends:
+                        FragmentManager manager = getChildFragmentManager();
+                        FriendsFragment fragment = (FriendsFragment) manager.findFragmentByTag(FriendsFragment.getTAG());
+                        if (fragment == null) {
+                            fragment = FriendsFragment.newInstance();
+                            manager.beginTransaction().replace(R.id.container, fragment, FriendsFragment.getTAG()).commit();
+                        }
+                        drawerLayout.closeDrawer(navView);
+                        break;
+                }
+                return true;
             }
         });
         return view;
