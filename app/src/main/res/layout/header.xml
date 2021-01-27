@@ -8,7 +8,7 @@
     android:paddingBottom="50dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/circle"
+        android:id="@+id/image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
@@ -19,9 +19,10 @@
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/circle"
+        android:layout_below="@id/image"
         android:layout_centerHorizontal="true"
         android:layout_margin="15dp"
         android:fontFamily="@font/rimini"
