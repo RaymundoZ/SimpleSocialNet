@@ -1,6 +1,5 @@
 package com.raymundo.simplesocialnet.pojo;
 
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,27 +10,27 @@ public class User implements Parcelable {
     private String nickname;
     private String birthday;
     private String city;
-    private Drawable image;
+    private String imagePath;
 
     public User() {
     }
 
-    public User(String name, Drawable image, String email, String nickname, String city, String birthday) {
+    public User(String name, String email, String nickname, String city, String birthday, String imagePath) {
         this.name = name;
-        this.image = image;
         this.email = email;
         this.nickname = nickname;
         this.city = city;
         this.birthday = birthday;
+        this.imagePath = imagePath;
     }
 
     protected User(Parcel in) {
         name = in.readString();
-        image = (Drawable) in.readValue(Drawable.class.getClassLoader());
         email = in.readString();
         nickname = in.readString();
         city = in.readString();
         birthday = in.readString();
+        imagePath = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -56,14 +55,6 @@ public class User implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Drawable getImage() {
-        return image;
-    }
-
-    public void setImage(Drawable image) {
-        this.image = image;
     }
 
     public String getEmail() {
@@ -98,6 +89,14 @@ public class User implements Parcelable {
         this.city = city;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -106,10 +105,10 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-        dest.writeValue(image);
         dest.writeString(email);
         dest.writeString(nickname);
         dest.writeString(city);
         dest.writeString(birthday);
+        dest.writeString(imagePath);
     }
 }

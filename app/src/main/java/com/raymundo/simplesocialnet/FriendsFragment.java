@@ -37,15 +37,15 @@ public class FriendsFragment extends Fragment {
         View view = inflater.inflate(R.layout.friends_fragment_layout, container, false);
         recyclerView = view.findViewById(R.id.recycler);
         List<User> list = new ArrayList<>();
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
-        list.add(new User("Вася Пупкин", getActivity().getResources().getDrawable(R.drawable.ic_launcher_background), null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
+        list.add(new User("Name", null, null, null, null, null));
         FriendsFragmentAdapter adapter = new FriendsFragmentAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
@@ -66,7 +66,6 @@ public class FriendsFragment extends Fragment {
 
         private void bind(User user) {
             textView.setText(user.getName());
-            imageView.setImageDrawable(user.getImage());
         }
     }
 

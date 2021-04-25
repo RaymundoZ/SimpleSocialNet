@@ -1,9 +1,11 @@
 package com.raymundo.simplesocialnet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +17,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,8 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.raymundo.simplesocialnet.pojo.User;
 
 public class MainActivity extends AppCompatActivity {
-
-    //private static final String SEND_TAG = "SEND_USER";
 
     private NavigationView navView;
     private DrawerLayout drawerLayout;
@@ -97,13 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-//        if (getIntent().hasExtra(SEND_TAG)) {
-//            User user = getIntent().getParcelableExtra(SEND_TAG);
-//            View view = navView.getHeaderView(0);
-//            MaterialTextView textView = view.findViewById(R.id.name);
-//            textView.setText(user.getName());
-//        }
     }
 
     private void init() {
@@ -125,7 +121,26 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 View view = navView.getHeaderView(0);
                 MaterialTextView textView = view.findViewById(R.id.name);
+                ShapeableImageView imageView = view.findViewById(R.id.image);
+                ProgressBar progressBar = view.findViewById(R.id.progressBar);
                 textView.setText(snapshot.getValue(User.class).getName());
+                imageView.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                holder.downloadFile("profileImage.jpg", new FirebaseHolder.DownloadFileListener() {
+                    @Override
+                    public void onDownloadFileCompleted(Object file) {
+                        imageView.setImageBitmap((Bitmap) file);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onDownloadFileFailed(String err) {
+                        Snackbar.make(findViewById(android.R.id.content), err, BaseTransientBottomBar.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+                });
             }
 
             @Override
@@ -134,17 +149,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-//    private void updateHeader(User user) {
-//        View view = navView.getHeaderView(0);
-//        MaterialTextView textView = view.findViewById(R.id.name);
-//        textView.setText(user.getName());
-//    }
-
-    //    public static void sendUser(User user, Context context) {
-//        Intent intent = new Intent(context, MainActivity.class);
-//        intent.putExtra(SEND_TAG, user);
-//        context.startActivity(intent);
-//    }
 
 }

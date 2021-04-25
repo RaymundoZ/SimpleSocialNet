@@ -1,5 +1,9 @@
 package com.raymundo.simplesocialnet;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,6 +17,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 import com.raymundo.simplesocialnet.pojo.User;
 
 public class FirebaseHolder {
@@ -23,14 +29,13 @@ public class FirebaseHolder {
         void onSignUpFailed(String err);
     }
 
-    private FirebaseUser firebaseUser;
-    private FirebaseDatabase database;
-    private User user;
+    private FirebaseStorage storage;
 
     private FirebaseHolder() {
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
         getCurrentUser(new GetDataListener() {
             @Override
             public void onGetDataCompleted(User user) {
@@ -42,6 +47,90 @@ public class FirebaseHolder {
                 user = User.getNullUser();
             }
         });
+    }
+
+    public FirebaseStorage getStorage() {
+        return storage;
+    }
+
+    public void signUpUser(String email, String password, SignUpListener listener) {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            firebaseUser = auth.getCurrentUser();
+                            String uid = firebaseUser.getUid();
+                            User currentUser = new User(null, firebaseUser.getEmail(), null, null, null, null);
+                            database.getReference("users").child(uid).setValue(currentUser, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    if (error == null) {
+                                        FirebaseHolder.this.user = currentUser;
+                                        listener.onSignUpCompleted();
+                                    } else
+                                        listener.onSignUpFailed(error.getMessage());
+                                }
+                            });
+                        } else {
+                            listener.onSignUpFailed(task.getException().toString());
+                        }
+                    }
+                }
+        ).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onSignUpFailed(e.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void uploadFile(String fileName, Uri fileUri, UploadFileListener listener) {
+        String uid = firebaseUser.getUid();
+        storage.getReference("images").child(uid).child(fileName).putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful())
+                    listener.onUploadFileCompleted();
+                else
+                    listener.onUploadFileFailed(task.getException().getLocalizedMessage());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onUploadFileFailed(e.getLocalizedMessage());
+            }
+        });
+    }
+
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase database;
+
+    public void downloadFile(String fileName, DownloadFileListener listener) {
+        String uid = firebaseUser.getUid();
+        storage.getReference("images").child(uid).child(fileName).getBytes(41943040).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+            @Override
+            public void onComplete(@NonNull Task<byte[]> task) {
+                if (task.isSuccessful()) {
+                    Bitmap image = BitmapFactory.decodeByteArray(task.getResult(), 0, task.getResult().length);
+                    listener.onDownloadFileCompleted(image);
+                } else
+                    listener.onDownloadFileFailed(task.getException().getLocalizedMessage());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onDownloadFileFailed(e.getLocalizedMessage());
+            }
+        });
+    }
+
+    private User user;
+
+    public interface SignInListener {
+        void onSignInCompleted();
+
+        void onSignInFailed(String err);
     }
 
     private static FirebaseHolder instance;
@@ -71,36 +160,16 @@ public class FirebaseHolder {
         return instance;
     }
 
-    public void signUpUser(String email, String password, SignUpListener listener) {
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            firebaseUser = auth.getCurrentUser();
-                            String uid = firebaseUser.getUid();
-                            User currentUser = new User(null, null, firebaseUser.getEmail(), null, null, null);
-                            database.getReference("users").child(uid).setValue(currentUser, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    if (error == null) {
-                                        FirebaseHolder.this.user = currentUser;
-                                        listener.onSignUpCompleted();
-                                    } else
-                                        listener.onSignUpFailed(error.getMessage());
-                                }
-                            });
-                        } else {
-                            listener.onSignUpFailed(task.getException().toString());
-                        }
-                    }
-                }
-        ).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                listener.onSignUpFailed(e.getLocalizedMessage());
-            }
-        });
+    public interface SetDataListener {
+        void onSetDataCompleted();
+
+        void onSetDataFailed(String err);
+    }
+
+    private interface GetDataListener {
+        void onGetDataCompleted(User user);
+
+        void onGetDataFailed(String err);
     }
 
     public void signInUser(String email, String password, SignInListener listener) {
@@ -179,42 +248,16 @@ public class FirebaseHolder {
         });
     }
 
-    public interface SignInListener {
-        void onSignInCompleted();
+    public interface UploadFileListener {
+        void onUploadFileCompleted();
 
-        void onSignInFailed(String err);
+        void onUploadFileFailed(String err);
     }
 
-    public interface SetDataListener {
-        void onSetDataCompleted();
+    public interface DownloadFileListener {
+        void onDownloadFileCompleted(Object file);
 
-        void onSetDataFailed(String err);
+        void onDownloadFileFailed(String err);
     }
-
-    private interface GetDataListener {
-        void onGetDataCompleted(User user);
-
-        void onGetDataFailed(String err);
-    }
-
-    public interface InitHolderListener {
-        void onInitHolderCompleted();
-    }
-
-//    public void initHolder(InitHolderListener listener) {
-//        getInstance();
-//        getCurrentUser(new GetDataListener() {
-//            @Override
-//            public void onGetDataCompleted(User user) {
-//                FirebaseHolder.this.user = user;
-//                listener.onInitHolderCompleted();
-//            }
-//            @Override
-//            public void onGetDataFailed(String err) {
-//                user = User.getNullUser();
-//                listener.onInitHolderCompleted();
-//            }
-//        });
-//    }
 
 }
