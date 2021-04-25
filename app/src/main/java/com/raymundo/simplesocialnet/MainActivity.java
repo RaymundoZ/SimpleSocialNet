@@ -1,6 +1,5 @@
 package com.raymundo.simplesocialnet;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,19 +12,24 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.raymundo.simplesocialnet.pojo.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SEND_TAG = "SEND_USER";
+    //private static final String SEND_TAG = "SEND_USER";
 
     private NavigationView navView;
     private DrawerLayout drawerLayout;
     private MaterialToolbar toolbar;
+    private FirebaseHolder holder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,13 +73,23 @@ public class MainActivity extends AppCompatActivity {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                FragmentManager manager = getSupportFragmentManager();
                 switch (item.getItemId()) {
                     case R.id.friends:
-                        FragmentManager manager = getSupportFragmentManager();
-                        FriendsFragment fragment = (FriendsFragment) manager.findFragmentByTag(FriendsFragment.getTAG());
-                        if (fragment == null) {
-                            fragment = FriendsFragment.newInstance();
-                            manager.beginTransaction().replace(R.id.container, fragment, FriendsFragment.getTAG()).commit();
+                        FriendsFragment friendsFragment = (FriendsFragment) manager.findFragmentByTag(FriendsFragment.getTAG());
+                        if (friendsFragment == null) {
+                            friendsFragment = FriendsFragment.newInstance();
+                            manager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                    .replace(R.id.container, friendsFragment, FriendsFragment.getTAG()).commit();
+                        }
+                        drawerLayout.closeDrawer(navView);
+                        break;
+                    case R.id.profile:
+                        ProfileFragment profileFragment = (ProfileFragment) manager.findFragmentByTag(ProfileFragment.getTAG());
+                        if (profileFragment == null) {
+                            profileFragment = ProfileFragment.newInstance();
+                            manager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                    .replace(R.id.container, profileFragment, ProfileFragment.getTAG()).commit();
                         }
                         drawerLayout.closeDrawer(navView);
                         break;
@@ -84,25 +98,53 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (getIntent().hasExtra(SEND_TAG)) {
-            User user = getIntent().getParcelableExtra(SEND_TAG);
-            View view = navView.getHeaderView(0);
-            MaterialTextView textView = view.findViewById(R.id.name);
-            textView.setText(user.getName());
-        }
-
+//        if (getIntent().hasExtra(SEND_TAG)) {
+//            User user = getIntent().getParcelableExtra(SEND_TAG);
+//            View view = navView.getHeaderView(0);
+//            MaterialTextView textView = view.findViewById(R.id.name);
+//            textView.setText(user.getName());
+//        }
     }
 
     private void init() {
+        holder = FirebaseHolder.getInstance();
         navView = findViewById(R.id.navView);
         drawerLayout = findViewById(R.id.drawer);
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseHolder.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, AuthenticationActivity.class));
+                finish();
+            }
+        });
+        String uid = holder.getFirebaseUser().getUid();
+        holder.getDatabase().getReference("users").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                View view = navView.getHeaderView(0);
+                MaterialTextView textView = view.findViewById(R.id.name);
+                textView.setText(snapshot.getValue(User.class).getName());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-    public static void sendUser(User user, Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(SEND_TAG, user);
-        context.startActivity(intent);
-    }
+//    private void updateHeader(User user) {
+//        View view = navView.getHeaderView(0);
+//        MaterialTextView textView = view.findViewById(R.id.name);
+//        textView.setText(user.getName());
+//    }
+
+    //    public static void sendUser(User user, Context context) {
+//        Intent intent = new Intent(context, MainActivity.class);
+//        intent.putExtra(SEND_TAG, user);
+//        context.startActivity(intent);
+//    }
 
 }

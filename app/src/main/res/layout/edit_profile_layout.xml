@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_hideable="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/blue"
+            android:elevation="4dp"
+            app:contentInsetStart="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/acceptButton"
+                    style="?attr/materialButtonStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="10dp"
+                    android:src="@drawable/check_icon"
+                    android:tint="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/declineButton"
+                    style="?attr/materialButtonStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="10dp"
+                    android:src="@drawable/close_icon"
+                    android:tint="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="30dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/ic_launcher"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/circleShape" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/profileImageLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:drawableEnd="@drawable/edit_icon"
+                    android:drawablePadding="5dp"
+                    android:labelFor="@id/profileImage"
+                    android:text="Изменить"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:drawableTint="@color/black"
+                    app:layout_constraintEnd_toEndOf="@id/profileImage"
+                    app:layout_constraintStart_toStartOf="@id/profileImage"
+                    app:layout_constraintTop_toBottomOf="@id/profileImage" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/emailLabel"
+                    style="@style/labelTextView"
+                    android:layout_marginTop="30dp"
+                    android:labelFor="@id/emailField"
+                    android:text="Email"
+                    app:layout_constraintStart_toStartOf="@id/emailField"
+                    app:layout_constraintTop_toBottomOf="@id/profileImageLabel" />
+
+                <EditText
+                    android:id="@+id/emailField"
+                    style="@style/editTextStyle"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textEmailAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/emailLabel" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nameLabel"
+                    style="@style/labelTextView"
+                    android:layout_marginTop="30dp"
+                    android:labelFor="@id/nameField"
+                    android:text="Name"
+                    app:layout_constraintStart_toStartOf="@id/nameField"
+                    app:layout_constraintTop_toBottomOf="@id/emailField" />
+
+                <EditText
+                    android:id="@+id/nameField"
+                    style="@style/editTextStyle"
+                    android:layout_marginTop="10dp"
+                    android:inputType="text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/nameLabel" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nicknameLabel"
+                    style="@style/labelTextView"
+                    android:layout_marginTop="30dp"
+                    android:labelFor="@id/nicknameField"
+                    android:text="Nickname"
+                    app:layout_constraintStart_toStartOf="@id/nicknameField"
+                    app:layout_constraintTop_toBottomOf="@id/nameField" />
+
+                <EditText
+                    android:id="@+id/nicknameField"
+                    style="@style/editTextStyle"
+                    android:layout_marginTop="10dp"
+                    android:inputType="text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/nicknameLabel" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/birthdayLabel"
+                    style="@style/labelTextView"
+                    android:layout_marginTop="30dp"
+                    android:labelFor="@id/nicknameField"
+                    android:text="Birthday"
+                    app:layout_constraintStart_toStartOf="@id/nicknameField"
+                    app:layout_constraintTop_toBottomOf="@id/nicknameField" />
+
+                <EditText
+                    android:id="@+id/birthdayField"
+                    style="@style/editTextStyle"
+                    android:layout_marginTop="10dp"
+                    android:inputType="date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/birthdayLabel" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cityLabel"
+                    style="@style/labelTextView"
+                    android:layout_marginTop="30dp"
+                    android:labelFor="@id/nicknameField"
+                    android:text="City"
+                    app:layout_constraintStart_toStartOf="@id/nicknameField"
+                    app:layout_constraintTop_toBottomOf="@id/birthdayField" />
+
+                <EditText
+                    android:id="@+id/cityField"
+                    style="@style/editTextStyle"
+                    android:layout_marginTop="10dp"
+                    android:inputType="text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cityLabel" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

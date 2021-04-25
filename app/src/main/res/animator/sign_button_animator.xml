@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="true">
+        <objectAnimator
+            android:duration="200"
+            android:propertyName="backgroundColor"
+            android:valueFrom="@color/white"
+            android:valueTo="@color/blue"
+            android:valueType="colorType" />
+    </item>
+
+    <item android:state_enabled="false">
+        <objectAnimator
+            android:duration="200"
+            android:propertyName="backgroundColor"
+            android:valueFrom="@color/blue"
+            android:valueTo="@color/white"
+            android:valueType="colorType" />
+    </item>
+
+</selector>
